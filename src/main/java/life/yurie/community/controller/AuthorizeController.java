@@ -47,7 +47,7 @@ public class AuthorizeController {
         accessTokenDTO.setState(state);
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser githubUser = githubProvider.getUser(accessToken);
-        if (githubUser != null) {
+        if (githubUser != null && githubUser.getId() != null) {
             // 登录成功，将用用户信息存入数据库
             User user = new User();
             // token用于代替自动生成的jsession，并存入cookie
