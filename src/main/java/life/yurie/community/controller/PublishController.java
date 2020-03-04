@@ -53,7 +53,7 @@ public class PublishController {
         //获取cookie中的用户信息
         User user = null;
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
+        if (cookies != null && cookies.length != 0) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("token")) {
                     String token = cookie.getValue();
