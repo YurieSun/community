@@ -1,7 +1,6 @@
 package life.yurie.community.controller;
 
 import life.yurie.community.mapper.QuestionMapper;
-import life.yurie.community.mapper.UserMapper;
 import life.yurie.community.model.Question;
 import life.yurie.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class PublishController {
     @Autowired
     private QuestionMapper questionMapper;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @GetMapping("/publish")
     public String publish() {
@@ -50,22 +45,8 @@ public class PublishController {
             model.addAttribute("error", "标签不能为空");
             return "publish";
         }
-        //获取cookie中的用户信息
-        User user = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length != 0) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    //通过token在数据库查找user
-                    user = userMapper.findByToken(token);
-                    if (user != null)
-                        request.getSession().setAttribute("user", user);
-                    break;
-                }
-            }
-        }
 
+        User user=(User)request.getSession().getAttribute("user");
         if (user == null) {
             model.addAttribute("error", "用户未登录");
             return "publish";
