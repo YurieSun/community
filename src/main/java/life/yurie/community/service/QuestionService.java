@@ -71,4 +71,15 @@ public class QuestionService {
         paginationDTO.setQuestions(questionDTOList);
         return paginationDTO;
     }
+
+    public void createOrUpdate(Question question) {
+        if (question.getId() == null) {
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.create(question);
+        } else {
+            question.setGmtModified(System.currentTimeMillis());
+            questionMapper.update(question);
+        }
+    }
 }
