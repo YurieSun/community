@@ -2,6 +2,8 @@ package life.yurie.community.service;
 
 import life.yurie.community.dto.PaginationDTO;
 import life.yurie.community.dto.QuestionDTO;
+import life.yurie.community.exception.CustomizeErrorCode;
+import life.yurie.community.exception.CustomizeException;
 import life.yurie.community.mapper.QuestionMapper;
 import life.yurie.community.mapper.UserMapper;
 import life.yurie.community.model.Question;
@@ -26,6 +28,9 @@ public class QuestionService {
     public QuestionDTO getById(Integer id) {
         QuestionDTO questionDTO = new QuestionDTO();
         Question question = questionMapper.selectByPrimaryKey(id);
+        if (question == null) {
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         BeanUtils.copyProperties(question, questionDTO);
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         questionDTO.setUser(user);
@@ -94,7 +99,10 @@ public class QuestionService {
             QuestionExample questionExample = new QuestionExample();
             questionExample.createCriteria()
                     .andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+            int updated=questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+            if(updated==1){
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
     }
 }
