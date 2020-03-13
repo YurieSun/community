@@ -4,6 +4,7 @@ import life.yurie.community.dto.PaginationDTO;
 import life.yurie.community.dto.QuestionDTO;
 import life.yurie.community.exception.CustomizeErrorCode;
 import life.yurie.community.exception.CustomizeException;
+import life.yurie.community.mapper.QuestionExtMapper;
 import life.yurie.community.mapper.QuestionMapper;
 import life.yurie.community.mapper.UserMapper;
 import life.yurie.community.model.Question;
@@ -25,7 +26,10 @@ public class QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
 
-    public QuestionDTO getById(Integer id) {
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
+
+    public QuestionDTO getById(Long id) {
         QuestionDTO questionDTO = new QuestionDTO();
         Question question = questionMapper.selectByPrimaryKey(id);
         if (question == null) {
@@ -58,7 +62,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO listById(Integer userId, Integer page, Integer size) {
+    public PaginationDTO listById(Long userId, Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria()
@@ -87,6 +91,9 @@ public class QuestionService {
 
     public void createOrUpdate(Question question) {
         if (question.getId() == null) {
+            question.setViewCount(0);
+            question.setLikeCount(0);
+            question.setCommentCount(0);
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
             questionMapper.insert(question);
@@ -99,10 +106,17 @@ public class QuestionService {
             QuestionExample questionExample = new QuestionExample();
             questionExample.createCriteria()
                     .andIdEqualTo(question.getId());
-            int updated=questionMapper.updateByExampleSelective(updateQuestion, questionExample);
-            if(updated==1){
+            int updated = questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+            if (updated == 1) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
+    }
+
+    public void incView(Long id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
     }
 }
