@@ -1,12 +1,12 @@
 package life.yurie.community.controller;
 
-import life.yurie.community.dto.CommentDTO;
+import life.yurie.community.dto.CommentCreateDTO;
 import life.yurie.community.dto.ResultDTO;
 import life.yurie.community.exception.CustomizeErrorCode;
-import life.yurie.community.mapper.CommentMapper;
 import life.yurie.community.model.Comment;
 import life.yurie.community.model.User;
 import life.yurie.community.service.CommentService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 public class CommentController {
@@ -25,16 +23,18 @@ public class CommentController {
 
     @ResponseBody
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
-    public Object post(@RequestBody CommentDTO commentDTO,
+    public Object post(@RequestBody CommentCreateDTO commentCreateDTO,
                        HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
             return ResultDTO.errorOf(CustomizeErrorCode.NOT_LOGIN);
         }
+        if(commentCreateDTO==null|| StringUtils.isBlank(commentCreateDTO.getContent()))
+            return ResultDTO.errorOf(CustomizeErrorCode.COMMENT_IS_EMPTY);
         Comment comment = new Comment();
-        comment.setParentId(commentDTO.getParentId());
-        comment.setType(commentDTO.getType());
-        comment.setContent(commentDTO.getContent());
+        comment.setParentId(commentCreateDTO.getParentId());
+        comment.setType(commentCreateDTO.getType());
+        comment.setContent(commentCreateDTO.getContent());
         comment.setCommentator(user.getId());
         comment.setLikeCount(0);
         comment.setGmtCreate(System.currentTimeMillis());
