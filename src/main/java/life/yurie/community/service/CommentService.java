@@ -4,10 +4,7 @@ import life.yurie.community.dto.CommentDTO;
 import life.yurie.community.enums.CommentTypeEnum;
 import life.yurie.community.exception.CustomizeErrorCode;
 import life.yurie.community.exception.CustomizeException;
-import life.yurie.community.mapper.CommentMapper;
-import life.yurie.community.mapper.QuestionExtMapper;
-import life.yurie.community.mapper.QuestionMapper;
-import life.yurie.community.mapper.UserMapper;
+import life.yurie.community.mapper.*;
 import life.yurie.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +29,9 @@ public class CommentService {
     private CommentMapper commentMapper;
 
     @Autowired
+    private CommentExtMapper commentExtMapper;
+
+    @Autowired
     private UserMapper userMapper;
 
     @Transactional
@@ -48,6 +48,8 @@ public class CommentService {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
             commentMapper.insert(comment);
+            dbComment.setCommentCount(1);
+            commentExtMapper.incCommentCount(dbComment);
         } else {
             // 回复问题
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -59,12 +61,12 @@ public class CommentService {
         }
     }
 
-    public List<CommentDTO> listByQuestionId(Long id) {
+    public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum typeEnum) {
         // 获取评论人
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()
                 .andParentIdEqualTo(id)
-                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+                .andTypeEqualTo(typeEnum.getType());
         commentExample.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExample(commentExample);
         if (comments.size() == 0)
