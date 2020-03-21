@@ -23,7 +23,7 @@ public class ProfileCotroller {
                           Model model,
                           @RequestParam(name = "page", defaultValue = "1") Integer page,
                           @RequestParam(name = "size", defaultValue = "5") Integer size) {
-        User user=(User)request.getSession().getAttribute("user");
+        User user = (User) request.getSession().getAttribute("user");
         if (user == null)
             return "redirect:/";
         if ("questions".equals(action)) {
