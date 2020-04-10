@@ -5,7 +5,7 @@ import life.yurie.community.model.User;
 import life.yurie.community.model.UserExample;
 import life.yurie.community.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-@Service
+@Component
 public class SessionInterceptor implements HandlerInterceptor {
 
     @Autowired

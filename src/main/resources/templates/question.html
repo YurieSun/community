@@ -27,7 +27,11 @@
                 <span class="text-desc">
                     作者：<span th:text="${question.user.name}"></span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
                     发布时间：<span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}"></span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-                    阅读数：<span th:text="${question.viewCount}"></span>
+                    阅读数：<span th:text="${question.viewCount}"></span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                    <span th:class="${likeStatus == 1}?'like-question liked':'like-question'" class="like-question" th:data-id="${question.id}" onclick="like(this)">
+                        <span class="glyphicon glyphicon-thumbs-up icon" aria-hidden="true"></span>
+                        <span th:text="${question.likeCount}"></span>
+                    </span>
                 </span>
                 <!--内容-->
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -73,7 +77,6 @@
                             </h5>
                             <div th:text="${comment.content}"></div>
                             <div class="menu">
-                                <span class="glyphicon glyphicon-thumbs-up icon" aria-hidden="true"></span>
                                 <span th:data-id="${comment.id}" onclick="collapseComments(this)" class="comment_icon">
                                     <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
                                     <span th:text="${comment.commentCount}"></span>

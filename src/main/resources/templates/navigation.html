@@ -22,7 +22,7 @@
                     <li th:if="${session.user != null}">
                         <a href="/publish">发布</a>
                     </li>
-                    <li>
+                    <li th:if="${session.user != null}">
                         <a href="/profile/replies">通知 <span class="badge" th:text="${session.unreadCount}"></span></a>
                     </li>
                     <li class="dropdown" th:if="${session.user != null}">

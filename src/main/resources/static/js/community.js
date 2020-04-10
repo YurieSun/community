@@ -124,3 +124,18 @@ function selectTag(e) {
 function showSelectedTag() {
     $("#selected-tag").show();
 }
+
+// 点赞
+function like(e) {
+    var id = e.getAttribute("data-id");
+    $.ajax({
+        type: "GET",
+        url: "/like?id="+id,
+        success: function (response) {
+            if (response.code == 200) {
+                window.location.reload();
+            }
+        },
+        dataType: "json"
+    });
+}

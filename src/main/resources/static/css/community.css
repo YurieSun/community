@@ -74,7 +74,16 @@ body {
 .menu .icon:hover {
     color: #499ef3;
 }
-
+.like-question {
+    font-size: 15px;
+    cursor: pointer;
+}
+.liked {
+    color: #499ef3;
+}
+.like-question:hover {
+    color: #499ef3;
+}
 .menu .comment_icon {
     font-size: 15px;
     cursor: pointer;

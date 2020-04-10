@@ -135,9 +135,15 @@ public class QuestionService {
         List<Question> questions = questionExtMapper.selectRelated(question);
         List<QuestionDTO> questionDTOS = questions.stream().map(q -> {
             QuestionDTO relatedQuestionDTO = new QuestionDTO();
-            BeanUtils.copyProperties(q,relatedQuestionDTO);
+            BeanUtils.copyProperties(q, relatedQuestionDTO);
             return relatedQuestionDTO;
         }).collect(Collectors.toList());
         return questionDTOS;
+    }
+
+    public void updateLikeCount(Long questionId, long likeCount) {
+        Question question = questionMapper.selectByPrimaryKey(questionId);
+        question.setLikeCount((int) likeCount);
+        questionMapper.updateByPrimaryKeySelective(question);
     }
 }

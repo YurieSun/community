@@ -28,7 +28,7 @@ public class IndexController {
         model.addAttribute("pagination", pagination);
         // 热门标签
         List<String> hots = hotTagCache.getHots();
-        model.addAttribute("hotTags",hots);
+        model.addAttribute("hotTags", hots);
         return "index";
     }
 }

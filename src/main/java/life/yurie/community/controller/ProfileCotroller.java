@@ -28,8 +28,6 @@ public class ProfileCotroller {
                           @RequestParam(name = "page", defaultValue = "1") Integer page,
                           @RequestParam(name = "size", defaultValue = "5") Integer size) {
         User user = (User) request.getSession().getAttribute("user");
-        if (user == null)
-            return "redirect:/";
         if ("questions".equals(action)) {
             model.addAttribute("section", "questions");
             model.addAttribute("sectionName", "我的提问");
@@ -41,7 +39,6 @@ public class ProfileCotroller {
             PaginationDTO paginationDTO = notificationService.listById(user.getId(), page, size);
             model.addAttribute("pagination", paginationDTO);
         }
-
         return "profile";
     }
 }

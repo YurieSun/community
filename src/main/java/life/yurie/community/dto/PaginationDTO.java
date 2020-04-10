@@ -13,11 +13,11 @@ public class PaginationDTO<T> {
     private boolean showPrevious;
     private boolean showNext;
     private Integer currentPage;
-    private int totalPage;
+    private Integer totalPage;
     private List<Integer> pages = new ArrayList<>();
 
     public void setPagination(Integer totalCount, Integer page, Integer size) {
-        totalPage = (int)Math.ceil(totalCount * 1.0 / size);
+        totalPage = (int) Math.ceil(totalCount * 1.0 / size);
         currentPage = page;
         if (page < 1) {
             currentPage = 1;
