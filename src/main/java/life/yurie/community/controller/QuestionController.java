@@ -31,13 +31,17 @@ public class QuestionController {
                            Model model) {
         QuestionDTO questionDTO = questionService.getById(id);
         List<CommentDTO> comments = commentService.listByTargetId(id, CommentTypeEnum.QUESTION);
-        List<QuestionDTO> relatedQuestions=questionService.selectRelated(questionDTO);
+        List<QuestionDTO> relatedQuestions = questionService.selectRelated(questionDTO);
         questionService.incView(id);
-        User user=(User) request.getSession().getAttribute("user");
         model.addAttribute("question", questionDTO);
         model.addAttribute("comments", comments);
         model.addAttribute("relatedQuestions", relatedQuestions);
-        model.addAttribute("likeStatus",likeService.getLikeStatus(user.getId(),id));
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            model.addAttribute("likeStatus", 0);
+        } else {
+            model.addAttribute("likeStatus", likeService.getLikeStatus(user.getId(), id));
+        }
         return "question";
     }
 }
